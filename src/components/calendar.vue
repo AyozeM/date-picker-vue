@@ -11,7 +11,7 @@
     <b-row  v-for="(week,i) in paintMonth.weeks" :key="i">
         <b-col v-for="(day,key,y) in week" :key="y+Math.random()"
         class="border text-center day"
-        :class="{'text-danger':key == 'sunday','bg-secondary':day == null,'border-secondary':day == null}"
+        :class="{'text-danger':key == 'sunday','bg-secondary':day == null,'border-secondary':day == null,'range':day != null && middleDates.includes(day.getTime()),'rangeExtreme':day != null && selectedDates.includes(day.getTime()),}"
         @click="selectDate(day)">
           <span v-if="day != null">{{day.getDate()}}</span>
         </b-col>
@@ -31,7 +31,8 @@ export default {
       daysName: ["L", "M", "W", "J", "V", "S", "D"],
       actualMonth: null,
       actualYear: null,
-      selectedDates: []
+      selectedDates: [],
+      middleDates:[]
     };
   },
   methods: {
@@ -42,7 +43,13 @@ export default {
       if(this.selectedDates.length > 1){
         this.selectedDates = [];
       }
-      this.selectedDates.push(date);
+      this.selectedDates.push(date.getTime());
+      if(this.selectedDates.length > 1){
+        this.middleDates = this.paintMonth.daysBetween(this.selectedDates);
+      }else{
+        this.middleDates = [];
+      }
+      this.$emit('date-checked',this.selectedDates.map(e=>new Date(e)));
     }
   },
   computed: {
@@ -73,15 +80,24 @@ export default {
 };
 </script>
 <style scoped>
-.bg-secondary {
-  background-color: #e4e5e6 !important;
-}
-.border-secondary {
-  border-color: #e4e5e6 !important;
-}
-.day:hover {
-  background-color: var(--primary);
-  color: var(--light);
-}
+  .bg-secondary {
+    background-color: #e4e5e6 !important;
+  }
+  .border-secondary {
+    border-color: #e4e5e6 !important;
+  }
+  .day:hover {
+    background-color: var(--primary);
+    color: var(--light);
+  }
+  .rangeExtreme{
+    background-color: var(--primary);
+    color:var(--light);
+    border-color: var(--primary) !important;
+  }
+  .range{
+    background-color: var(--info);
+    color:var(--light);
+    border-color: var(--info) !important;
+  }
 </style>
-

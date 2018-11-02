@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <calendar></calendar>
+    <calendar @date-checked="captureDates"></calendar>
   </b-container>
 </template>
 
@@ -11,6 +11,12 @@ export default {
   name: "app",
   data() {
     return {};
+  },
+  methods:{
+    captureDates(dates){
+      console.log(dates);
+
+    }
   }
 };
 </script>

@@ -1,13 +1,14 @@
 <template>
-  <b-container>
-    <calendar @date-checked="captureDates"></calendar>
-  </b-container>
+ <section>
+   <h1>Susolandiaa</h1>
+   <calendar></calendar>
+ </section>
 </template>
 
 <script>
 import calendar from "./components/calendar";
 export default {
-  components: { calendar },
+  components:{calendar},
   name: "app",
   data() {
     return {};

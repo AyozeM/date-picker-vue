@@ -1,6 +1,17 @@
 <template>
   <section>
-    <b-row>
+    <div class="row">
+      <div class="col text-center"><</div>
+      <div class="col text-center">{{actualYear}}</div>
+      <div class="col text-center">></div>
+    </div class="row">
+    <div class="row">
+      <div class="col text-center" v-for="(name,i) in daysName" :key="i" :class="{'danger': name == daysName[6]}">{{name}}</div>
+    </div>
+    <div class="row" v-for="(week,i) in paintMonth.weeks" :key="i">
+      <!-- <div class="col" v-for="(day,key,y) in week" :key="y+Math.random()" class=""></div> -->
+    </div>
+<!--     <b-row>
       <b-col class="text-center" @click="changeMonth(pastMonth)"><fa icon="angle-left"/></b-col>
       <b-col class="text-center">{{paintMonth.monthName()}} {{actualYear}}</b-col>
       <b-col class="text-center" @click="changeMonth(nextMonth)"><fa icon="angle-right"/></b-col>
@@ -9,13 +20,12 @@
       <b-col v-for="(name,i) in daysName" :key="i" class="border text-center" :class="{'text-danger': name == daysName[6]}">{{name}}</b-col>
     </b-row>
     <b-row  v-for="(week,i) in paintMonth.weeks" :key="i">
-        <b-col v-for="(day,key,y) in week" :key="y+Math.random()"
-        class="border text-center day"
+        <b-col v-for="(day,key,y) in week" :key="y+Math.random()" class="border text-center day"
         :class="{'text-danger':key == 'sunday','bg-secondary':day == null,'border-secondary':day == null,'range':day != null && middleDates.includes(day.getTime()),'rangeExtreme':day != null && selectedDates.includes(day.getTime()),}"
         @click="selectDate(day)">
           <span v-if="day != null">{{day.getDate()}}</span>
         </b-col>
-    </b-row>
+    </b-row> -->
   </section>
 </template>
 <script>
@@ -99,5 +109,19 @@ export default {
     background-color: var(--info);
     color:var(--light);
     border-color: var(--info) !important;
+  }
+
+  .danger{
+    color:red
+  }
+
+  .row{
+    display:flex;
+  }
+  .col{
+    flex-grow:1;
+  }
+  .text-center{
+    text-align:center;
   }
 </style>

@@ -1,31 +1,20 @@
 <template>
   <section>
-    <div class="row">
-      <div class="col text-center"><</div>
+    <header class="row">
+      <div class="col text-center button"  @click="changeMonth(pastMonth)">&#60;</div>
       <div class="col text-center">{{actualYear}}</div>
-      <div class="col text-center">></div>
-    </div class="row">
+      <div class="col text-center button" @click="changeMonth(nextMonth)">&#62;</div>
+    </header>
     <div class="row">
       <div class="col text-center" v-for="(name,i) in daysName" :key="i" :class="{'danger': name == daysName[6]}">{{name}}</div>
     </div>
     <div class="row" v-for="(week,i) in paintMonth.weeks" :key="i">
-      <!-- <div class="col" v-for="(day,key,y) in week" :key="y+Math.random()" class=""></div> -->
-    </div>
-<!--     <b-row>
-      <b-col class="text-center" @click="changeMonth(pastMonth)"><fa icon="angle-left"/></b-col>
-      <b-col class="text-center">{{paintMonth.monthName()}} {{actualYear}}</b-col>
-      <b-col class="text-center" @click="changeMonth(nextMonth)"><fa icon="angle-right"/></b-col>
-    </b-row>
-    <b-row>
-      <b-col v-for="(name,i) in daysName" :key="i" class="border text-center" :class="{'text-danger': name == daysName[6]}">{{name}}</b-col>
-    </b-row>
-    <b-row  v-for="(week,i) in paintMonth.weeks" :key="i">
-        <b-col v-for="(day,key,y) in week" :key="y+Math.random()" class="border text-center day"
-        :class="{'text-danger':key == 'sunday','bg-secondary':day == null,'border-secondary':day == null,'range':day != null && middleDates.includes(day.getTime()),'rangeExtreme':day != null && selectedDates.includes(day.getTime()),}"
+      <div class="col text-center day" v-for="(day,key,y) in week" :key="y+Math.random()"
+        :class="{'danger': key == 'sunday', 'disable':day == null,'range':day != null && middleDates.includes(day.getTime()),'rangeExtreme':day != null && selectedDates.includes(day.getTime()),}"
         @click="selectDate(day)">
           <span v-if="day != null">{{day.getDate()}}</span>
-        </b-col>
-    </b-row> -->
+      </div>
+    </div>
   </section>
 </template>
 <script>
@@ -90,36 +79,53 @@ export default {
 };
 </script>
 <style scoped>
+  section{
+    --primary:#007BFF;
+    --light:#F8F9FA;
+    --info:#17A2B8;
+    --danger:#DC3545;
+    --secondary:#e4e5e6;
+  }
   .bg-secondary {
-    background-color: #e4e5e6 !important;
+    background-color:var(--secondary);
   }
   .border-secondary {
-    border-color: #e4e5e6 !important;
+    border-color: var(--secondary);
   }
-  .day:hover {
+  .day:not(.disable):hover {
     background-color: var(--primary);
     color: var(--light);
+  }
+  .disable{
+    background-color:var(--secondary);
+    border-color: var(--secondary);
   }
   .rangeExtreme{
     background-color: var(--primary);
     color:var(--light);
-    border-color: var(--primary) !important;
+    border-color: var(--primary);
   }
   .range{
     background-color: var(--info);
     color:var(--light);
-    border-color: var(--info) !important;
+    border-color: var(--info);
   }
-
+  .day,.button{
+    cursor: pointer;
+  }
   .danger{
-    color:red
+    color:var(--danger)
   }
 
   .row{
     display:flex;
   }
   .col{
-    flex-grow:1;
+    flex-basis: calc(100%/7);
+    padding: 1%;
+  }
+  header .col{
+    flex-grow: 1;
   }
   .text-center{
     text-align:center;

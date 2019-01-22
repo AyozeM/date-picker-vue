@@ -1,7 +1,9 @@
 <template>
  <section>
-   <h1>Susolandiaa</h1>
-   <calendar></calendar>
+   <calendar @date-checked="captureDates"></calendar>
+   <pre>
+     {{$data}}
+   </pre>
  </section>
 </template>
 
@@ -11,13 +13,21 @@ export default {
   components:{calendar},
   name: "app",
   data() {
-    return {};
+    return {
+      dates:null
+    };
   },
   methods:{
     captureDates(dates){
       console.log(dates);
-
+      this.dates = dates;
     }
   }
 };
 </script>
+
+<style scoped>
+section{
+  width: 50vw;
+}
+</style>

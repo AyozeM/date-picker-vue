@@ -2,24 +2,36 @@
   <section>
     <header class="row">
       <div class="col text-center button"  @click="changeMonth(pastMonth)">&#60;</div>
-      <div class="col text-center">{{actualYear}}</div>
+      <div class="col text-center">{{headerInfo}}</div>
       <div class="col text-center button" @click="changeMonth(nextMonth)">&#62;</div>
     </header>
-    <div class="row">
+    <article class="row names">
       <div class="col text-center" v-for="(name,i) in daysName" :key="i" :class="{'danger': name == daysName[6]}">{{name}}</div>
-    </div>
-    <div class="row" v-for="(week,i) in paintMonth.weeks" :key="i">
+    </article>
+    <article class="row" v-for="(week,i) in paintMonth.weeks" :key="i">
       <div class="col text-center day" v-for="(day,key,y) in week" :key="y+Math.random()"
-        :class="{'danger': key == 'sunday', 'disable':day == null,'range':day != null && middleDates.includes(day.getTime()),'rangeExtreme':day != null && selectedDates.includes(day.getTime()),}"
+        :class="{
+          'danger': key == 'sunday',
+          'disable':day == null || daysDisable.includes(day.getTime()),
+          'range':day != null && middleDates.includes(day.getTime()) && !daysDisable.includes(day.getTime()),
+          'rangeExtreme':day != null && selectedDates.includes(day.getTime()),
+        }"
         @click="selectDate(day)">
           <span v-if="day != null">{{day.getDate()}}</span>
       </div>
-    </div>
+    </article>
   </section>
 </template>
+
 <script>
 import month from "./month";
 export default {
+  props:{
+    disable:{
+      type: Array,
+      default: () => ['01/18/2019']
+    }
+  },
   created() {
     let aux = new Date();
     this.actualMonth = aux.getMonth();
@@ -39,19 +51,27 @@ export default {
       this.actualMonth = month;
     },
     selectDate(date) {
-      if(this.selectedDates.length > 1){
-        this.selectedDates = [];
+      if(date != null && !this.daysDisable.includes(date.getTime())){
+        if(this.selectedDates.length > 1){
+          this.selectedDates = [];
+        }
+        this.selectedDates.push(date.getTime());
+        if(this.selectedDates.length > 1){
+          this.middleDates = this.paintMonth.daysBetween(this.selectedDates);
+        }else{
+          this.middleDates = [];
+        }
+        this.$emit('date-checked',this.selectedDates.map(e=>new Date(e)));
       }
-      this.selectedDates.push(date.getTime());
-      if(this.selectedDates.length > 1){
-        this.middleDates = this.paintMonth.daysBetween(this.selectedDates);
-      }else{
-        this.middleDates = [];
-      }
-      this.$emit('date-checked',this.selectedDates.map(e=>new Date(e)));
     }
   },
   computed: {
+    daysDisable(){
+      return this.disable.map(e => new Date(e).getTime());
+    },
+    headerInfo(){
+      return `${this.actualMonth + 1} / ${this.actualYear}`;
+    },
     paintMonth() {
       return new month(this.actualMonth, this.actualYear);
     },
@@ -78,6 +98,7 @@ export default {
   }
 };
 </script>
+
 <style scoped>
   section{
     --primary:#007BFF;
@@ -85,6 +106,9 @@ export default {
     --info:#17A2B8;
     --danger:#DC3545;
     --secondary:#e4e5e6;
+  }
+  article div{
+    border: thin solid var(--secondary)
   }
   .bg-secondary {
     background-color:var(--secondary);
@@ -103,12 +127,10 @@ export default {
   .rangeExtreme{
     background-color: var(--primary);
     color:var(--light);
-    border-color: var(--primary);
   }
   .range{
     background-color: var(--info);
     color:var(--light);
-    border-color: var(--info);
   }
   .day,.button{
     cursor: pointer;

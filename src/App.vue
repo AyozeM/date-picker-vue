@@ -1,9 +1,9 @@
 <template>
  <section>
    <calendar @date-checked="captureDates"></calendar>
-   <pre>
+<!--    <pre>
      {{$data}}
-   </pre>
+   </pre> -->
  </section>
 </template>
 
@@ -27,6 +27,12 @@ export default {
 </script>
 
 <style scoped>
+*{
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 section{
   width: 50vw;
 }

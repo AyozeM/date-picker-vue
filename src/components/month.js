@@ -6,12 +6,13 @@ export default class month {
    * @param {Number} month numero del mes menos uno (formato array)
    * @param {Number} year Año del que se quiere el mes, formato de 4 numeros
    */
-  constructor(month, year) {
+  constructor(month, year, weekends = true) {
     this.allMonths = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
     this.month = month;
     this.year = year;
     this.lastDate = this.lastdate();
     this.weeks = [];
+    this.weekends = weekends;
     this.completeMonth();
   }
 
@@ -27,20 +28,28 @@ export default class month {
    * Rellena las semanas del mes actual
    */
   completeMonth() {
-    let actualweek = new week();
+    let actualweek = new week(this.weekends);
     for (let i = 1; i <= this.lastDate; i++) {
       let auxDate = new Date(`${this.month + 1}-${i}-${this.year}`);
       actualweek.setdate(auxDate, auxDate.getDay());
+
       if (auxDate.getDay() == 0) {
-        this.weeks.push(actualweek);
-        actualweek = new week();
+        this.weeks.push(this.clearWeekends(actualweek));
+        actualweek = new week(this.weekends);
       }
     }
     if (!this.weeks[this.weeks.length - 1].contains(this.lastDate)) {
-      this.weeks.push(actualweek);
+      this.weeks.push(this.clearWeekends(actualweek));
     }
   }
 
+  clearWeekends(week){
+    if(!this.weekends){
+      delete(week.saturday);
+      delete(week.sunday);
+    }
+    return week;
+  }
   /**
    * Obtiene el total de dias de un mes concreto
    * @param {Number} month numero del mes menos uno (formato array)
@@ -106,10 +115,6 @@ export default class month {
     let middleDates = [];
     let initDate = x.getDate();
     let totalDates = actualMonth != dates[1].getMonth() ? this.lastdate(dates[0].getMonth()) : dates[1].getDate();
-    /*     if(dates[0].getDate() == totalDates){
-          initDate = 1;
-          actualMonth = actualMonth + 1 > 11 ? 0 : actualMonth+1
-        } */
 
     for (let i = initDate; i <= totalDates; i++) {
       middleDates.push(new Date(`${actualMonth + 1}/${i}/${actualYear}`))

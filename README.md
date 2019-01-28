@@ -2,17 +2,9 @@
 
 > calendar input for check an only date and date range
 
-## Build Setup
+## Propiedades
+* **disable**: array de strings con formado mm/dd/yyyy
+* **weekends**: booleano, si es false elimina los fines de semana, por defecto es true
 
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-```
-
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Eventos
+* **date-checked**: devuelve un array con objetos tipo fecha, en el caso de seleccionar un rango mandará los extremos

@@ -1,0 +1,7 @@
+*.json
+*.html
+.babelrc
+.editorconfig
+main.js
+App.vue
+webpack.config.js

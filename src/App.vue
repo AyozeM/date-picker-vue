@@ -1,6 +1,6 @@
 <template>
  <section>
-   <calendar @date-checked="captureDates"></calendar>
+   <calendar @date-checked="captureDates" :weekends="weekends" :disable="['01-18-2019']"></calendar>
 <!--    <pre>
      {{$data}}
    </pre> -->
@@ -14,7 +14,8 @@ export default {
   name: "app",
   data() {
     return {
-      dates:null
+      dates:null,
+      weekends:false
     };
   },
   methods:{

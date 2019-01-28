@@ -6,7 +6,7 @@
       <div class="col text-center button" @click="changeMonth(nextMonth)">&#62;</div>
     </header>
     <article class="row names">
-      <div class="col text-center" v-for="(name,i) in daysName" :key="i" :class="{'danger': name == daysName[6]}">{{name}}</div>
+      <div class="col text-center" v-for="(name,i) in daysName" :key="i" :class="{'danger': name == daysName[6], 'col-5':!weekends}">{{name}}</div>
     </article>
     <article class="row" v-for="(week,i) in paintMonth.weeks" :key="i">
       <div class="col text-center day" v-for="(day,key,y) in week" :key="y+Math.random()"
@@ -15,6 +15,7 @@
           'disable':day == null || daysDisable.includes(day.getTime()),
           'range':day != null && middleDates.includes(day.getTime()) && !daysDisable.includes(day.getTime()),
           'rangeExtreme':day != null && selectedDates.includes(day.getTime()),
+          'col-5': !weekends
         }"
         @click="selectDate(day)">
           <span v-if="day != null">{{day.getDate()}}</span>
@@ -29,7 +30,11 @@ export default {
   props:{
     disable:{
       type: Array,
-      default: () => ['01/18/2019']
+      default: () => []
+    },
+    weekends:{
+      type: Boolean,
+      default: true
     }
   },
   created() {
@@ -39,7 +44,6 @@ export default {
   },
   data() {
     return {
-      daysName: ["L", "M", "W", "J", "V", "S", "D"],
       actualMonth: null,
       actualYear: null,
       selectedDates: [],
@@ -66,6 +70,13 @@ export default {
     }
   },
   computed: {
+    daysName(){
+      const days = ["L", "M", "W", "J", "V", "S", "D"];
+      if(!this.weekends){
+        days.splice(-2);
+      }
+      return days;
+    },
     daysDisable(){
       return this.disable.map(e => new Date(e).getTime());
     },
@@ -73,7 +84,7 @@ export default {
       return `${this.actualMonth + 1} / ${this.actualYear}`;
     },
     paintMonth() {
-      return new month(this.actualMonth, this.actualYear);
+      return new month(this.actualMonth, this.actualYear, this.weekends);
     },
     nextMonth() {
       let auxMonth;
@@ -143,8 +154,11 @@ export default {
     display:flex;
   }
   .col{
-    flex-basis: calc(100%/7);
     padding: 1%;
+    flex-basis: calc(100%/7);
+  }
+  .col-5{
+    flex-basis: calc(100%/5)
   }
   header .col{
     flex-grow: 1;
